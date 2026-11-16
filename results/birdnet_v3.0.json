@@ -1,10 +1,11 @@
 {
  "_meta": {
-  "label": "BirdNET+ V3.0 (12K release)",
-  "model": "BirdNET+ V3.0 Global 12K release, TorchScript FP32 (embeddings: second output), 32 kHz, 3 s windows; right_whale_upcall not run yet",
+  "label": "BirdNET+ V3.0",
+  "model": "BirdNET+ V3.0 Global 12K (doi:10.5281/zenodo.24162518), embeddings output (1,280 values), 32 kHz, 3 s windows; computed with the TorchScript build, whose embeddings match the Zenodo ONNX file (cosine >= 0.9999 on 261 windows); right_whale_upcall not run yet",
   "recipe": "windows of the model's input length, hop half a window; mean + max pooled per clip; standardized; class-balanced logistic regression, C in {0.001, 0.01, 0.1, 1, 10} chosen on val; refit on train + val; test scored once",
   "date": "2026-11",
-  "probebench": "0.1.0"
+  "probebench": "0.1.0",
+  "spec": "birdnet-v3.0"
  },
  "anafcc_flightcalls": {
   "headline": 0.9008,

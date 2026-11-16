@@ -10,14 +10,15 @@ whether an agent may commit) belong in an untracked `CLAUDE.local.md` /
 
 ## Setup
 
-`pip install -e ".[dev]"` gets the package, the `birdnet` package (BirdNET V3.0 on
-ONNX), pytest and ruff. BirdNET V2.4 needs TensorFlow: `.[birdnet-tf]`.
+`pip install -e ".[dev]"` gets the package, onnxruntime (BirdNET+ V3.0),
+ai-edge-litert (BirdNET V2.4), pytest and ruff. The base install needs neither
+runtime; each adapter imports its runtime when it is built.
 
 **Data and models download on first use.** `probebench setup` / `run` fetch the
 datasets into the data root (`--data`, else `$PROBEBENCH_DATA`, else `./data`,
-which `.gitignore` excludes); the `birdnet` package caches its models under
-`$BIRDNET_APP_DATA`. The test suite is offline: it builds synthetic tasks and uses
-the mel baseline, so it needs neither.
+which `.gitignore` excludes); the BirdNET adapters fetch their model files from
+the Zenodo records into `<data>/models/` (MD5-checked). The test suite is offline:
+it builds synthetic tasks and uses the mel baseline, so it needs neither.
 
 ## Before handing work back
 
@@ -30,7 +31,9 @@ in two places** (the `tests` extra and `.github/workflows/ci.yml`); bump both.
 - `datasets/`: one module per source dataset (download locations + `prepare`),
   registered in `datasets/__init__.py`.
 - `models/`: adapters (`name`, `sample_rate`, `window_s`, `embed`), registered by
-  `@register`; `from_spec` also takes `torchscript:` and `py:` specs.
+  `@register` (factories get the models folder); `from_spec` also takes
+  `torchscript:` and `py:` specs. `birdnet_zenodo.py` pins the Zenodo record and
+  file of each BirdNET model; a model change is a new record, not a new runtime.
 - `embed.py` (windows, pooling, cache), `probe.py` (the recipe), `report.py`
   (table, PR figure), `cli.py`.
 
@@ -43,9 +46,10 @@ in two places** (the `tests` extra and `.github/workflows/ci.yml`); bump both.
   individual (`grouped_split`, `per_class_group_split`); random clip-level splits
   leak and inflate scores. Say in the task description what the split is grouped by.
 - **Name models by what produced the numbers.** A results file records the model
-  file or release; never present numbers of one checkpoint under another's name
-  (e.g. the `birdnet` package's "3.0" is not necessarily the V3.0 release used in
-  `results/`).
+  file or release (DOI); never present numbers of one checkpoint under another's
+  name. Results computed with another build of a model (e.g. a TorchScript or
+  SavedModel export) are published under the Zenodo file only after its embeddings
+  were shown to match. The embedding cache is keyed on the adapter's `provenance`.
 - Published numbers use three decimals and American English.
 - No machine-local paths in tracked files; manifests store paths relative to the
   task folder.

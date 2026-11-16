@@ -43,9 +43,13 @@ Python 3.11 or newer and the system library libsndfile
 ```sh
 git clone https://github.com/birdnet-team/probeBench.git
 cd probeBench
-pip install -e ".[birdnet]"      # BirdNET V3.0 (ONNX, no TensorFlow)
-pip install -e ".[birdnet-tf]"   # adds TensorFlow for BirdNET V2.4
+pip install -e ".[v3]"       # BirdNET+ V3.0 (onnxruntime)
+pip install -e ".[v24]"      # BirdNET V2.4 (ai-edge-litert)
+pip install -e ".[all]"      # both
 ```
+
+The base install (mel baseline, data, probe) needs neither runtime. Everything runs
+on the CPU; `PROBEBENCH_THREADS` sets the model threads (default 4).
 
 ## Quickstart
 
@@ -69,14 +73,27 @@ Missing tasks are downloaded and prepared first (about 52 GB of downloads for al
 prepared.
 
 All data goes under one root: `--data <dir>`, else `$PROBEBENCH_DATA`, else
-`./data`. BirdNET models are cached by the `birdnet` package (`$BIRDNET_APP_DATA`).
+`./data`; model files are downloaded into `<data>/models/` on first use.
+
+## Models
+
+| Spec | Model | Source | Runtime | Input | Embedding | License |
+|---|---|---|---|---|---|---|
+| `birdnet-v3.0` | BirdNET+ V3.0 Global 12K, FP32 ONNX | [10.5281/zenodo.24162518](https://doi.org/10.5281/zenodo.24162518) | onnxruntime | 32 kHz, 3 s | `embeddings` output, 1,280 | Apache-2.0 |
+| `birdnet-v2.4` | BirdNET V2.4 Global 6K, FP32 TFLite | [10.5281/zenodo.15050749](https://doi.org/10.5281/zenodo.15050749) | ai-edge-litert | 48 kHz, 3 s | `GLOBAL_AVG_POOL` tensor, 1,024 | CC BY-NC 4.0 |
+| `mel` | log-mel mean and standard deviation (no learning) | - | numpy / librosa | 24 kHz, 2.5 s | 256 | - |
+| `torchscript:<file.pt>` | any TorchScript model returning `(scores, embeddings)` | your file | torch (`.[torch]`) | 32 kHz, 3 s by default | second output | yours |
+| `py:<module>:<factory>` | your own adapter | your code | yours | yours | yours | yours |
+
+The BirdNET files are fetched from Zenodo with the record's MD5 checked. BirdNET
+V2.4 is licensed CC BY-NC 4.0: non-commercial use only.
 
 ## Results
 
 Headline metric per task on the test split (accuracy, macro-F1, macro mAP or AUC;
 higher is better). The mean is over the 14 tasks all three models have.
 
-| Task | Metric | BirdNET+ V3.0 (12K release) | BirdNET V2.4 | Mel baseline |
+| Task | Metric | BirdNET+ V3.0 | BirdNET V2.4 | Mel baseline |
 |---|---|---:|---:|---:|
 | anafcc_flightcalls | macro_f1 | 0.901 | 0.767 | 0.486 |
 | chiffchaff_acrossyear | accuracy | 0.105 | 0.175 | 0.175 |
@@ -98,15 +115,11 @@ higher is better). The mean is over the 14 tasks all three models have.
 ![Mean and per-task precision-recall curves](results/probe_bench_pr.png)
 
 The per-task numbers, chosen C values and split sizes are in [`results/`](results/).
-
-**Which models these are.** The BirdNET+ V3.0 column is the V3.0 Global 12K release
-(TorchScript, embedding = its second output), run with `torchscript:<file.pt>`. The
-`birdnet-v3.0` spec uses whatever the `birdnet` package serves as "3.0"; with
-birdnet 1.4 that is BirdNET+ V3.0-preview3.1 (11K classes), a different checkpoint
-whose numbers differ from the 12K column. Every results file records the model it
-came from. BirdNET V2.4 was run from its SavedModel (`embeddings` signature, 1,024
-values); `birdnet-v2.4` loads V2.4 through the package (its TFLite build), whose
-numbers can differ slightly from the SavedModel run.
+They were computed from other builds of the same two models (V3.0: the TorchScript
+release; V2.4: its SavedModel); on 261 real windows their embeddings match the
+Zenodo files `birdnet-v3.0` and `birdnet-v2.4` load (cosine >= 0.9999 for V3.0 and
+>= 0.999 for V2.4), and a rerun of ESC-50 and Watkins with those specs reproduces
+the table within 0.01 (V3.0 0.888 and 0.613, V2.4 0.809 and 0.658).
 
 V3.0 and V2.4 tie on average with different strengths: V3.0 leads on general and
 soundscape sounds (ESC-50, EDANSA, gibbons, minke whales, insects) and flight calls;
@@ -185,8 +198,9 @@ probebench run --model py:my_model:make
 ```
 
 To give it a short name inside the package, decorate the factory with
-`@register("my-model")` in a module under `src/probebench/models/` (see `mel.py`)
-and import that module in `models/__init__.py`. TorchScript files that take raw audio
+`@register("my-model")` in a module under `src/probebench/models/` (see `mel.py`;
+the factory receives the folder to cache model files in, `<data>/models`) and
+import that module in `models/__init__.py`. TorchScript files that take raw audio
 and return `(scores, embeddings)` work as they are:
 `--model torchscript:model.pt@my_name`.
 
@@ -203,6 +217,7 @@ recording, session or individual spans train and test.
 
 ```text
 <data>/raw/<dataset>/             downloads; archives extracted to extracted/
+<data>/models/zenodo_<record>/    model files, downloaded on first use
 <data>/tasks/<task>/task.json     kind, metric, time expansion, source, license, citation
 <data>/tasks/<task>/manifest.parquet  clip_id, path, start_s, end_s, label, split, group
 <data>/cache/<model>/<task>.npz   pooled clip embeddings (reused across runs)
@@ -216,8 +231,8 @@ recording, session or individual spans train and test.
 - **Datasets**: not part of this repository; probeBench downloads them from their
   original hosts, and each keeps its own license, recorded in its task's `task.json`.
   Several are non-commercial or academic-use only.
-- **Models**: each evaluated model keeps its own license (for BirdNET, see the
-  [`birdnet` package](https://github.com/birdnet-team/birdnet)).
+- **Models**: not part of this repository; each keeps its own license (BirdNET+
+  V3.0: Apache-2.0; BirdNET V2.4: CC BY-NC 4.0, non-commercial use only).
 
 ## Citation
 

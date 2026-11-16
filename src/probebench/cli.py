@@ -70,11 +70,11 @@ def prepare(p: Paths, tasks: list[str] | None, force: bool = False) -> None:
             print(f"{d.name}: prepare FAILED ({e!r})", flush=True)
 
 
-def fetch_models(specs: list[str]) -> None:
+def fetch_models(specs: list[str], p: Paths) -> None:
     from .models import from_spec
 
     for s in specs:
-        a = from_spec(s)  # loading downloads the weights on first use
+        a = from_spec(s, p.models)  # downloads the model file on first use
         print(f"{s}: ready ({a.name}, {a.sample_rate} Hz, {a.window_s} s)")
         if hasattr(a, "close"):
             a.close()
@@ -94,13 +94,13 @@ def cmd_setup(a, p: Paths) -> None:
     download(p, a.tasks, a.keep_archives)
     prepare(p, a.tasks)
     if a.models:
-        fetch_models(a.models)
+        fetch_models(a.models, p)
 
 
 def cmd_download(a, p: Paths) -> None:
     download(p, a.tasks, a.keep_archives)
     if a.models:
-        fetch_models(a.models)
+        fetch_models(a.models, p)
 
 
 def cmd_prepare(a, p: Paths) -> None:
@@ -115,7 +115,7 @@ def cmd_run(a, p: Paths) -> None:
     if not a.no_download:
         download(p, a.tasks)
         prepare(p, a.tasks)
-    adapter = from_spec(a.model)
+    adapter = from_spec(a.model, p.models)
     out = p.results / f"{adapter.name}.json"
     res = json.loads(out.read_text()) if out.exists() else {}
     res["_meta"] = {

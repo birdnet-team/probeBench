@@ -65,6 +65,7 @@ def embed_task(
         "time_expansion": te or task.time_expansion,
         "sample_rate": adapter.sample_rate,
         "window_s": adapter.window_s,
+        "model": getattr(adapter, "provenance", None),
     }
     if out.exists():
         z = np.load(out, allow_pickle=False)

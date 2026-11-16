@@ -10,11 +10,14 @@ An adapter is any object with
 Built-in specs for ``probebench run --model``:
 
     mel                      log-mel statistics, no learning (the floor)
-    birdnet-v3.0             BirdNET V3.0 through the birdnet package (ONNX)
-    birdnet-v2.4             BirdNET V2.4 through the birdnet package (TensorFlow)
+    birdnet-v3.0             BirdNET+ V3.0 12K from Zenodo (ONNX, onnxruntime)
+    birdnet-v2.4             BirdNET V2.4 from Zenodo (TFLite, ai-edge-litert)
     torchscript:<file.pt>    a TorchScript model taking raw audio and returning
                              (scores, embeddings), e.g. a BirdNET+ V3.0 release file
     py:<module>:<factory>    your own: ``factory()`` returns an adapter
+
+Registered factories receive the folder model files are cached in
+(``<data>/models``).
 
 Adding a model is one small class: see ``mel.py`` for a complete example, and
 ``register`` to give it a short name.
@@ -24,6 +27,7 @@ from __future__ import annotations
 
 import importlib
 from collections.abc import Callable
+from pathlib import Path
 from typing import Protocol, runtime_checkable
 
 import numpy as np
@@ -38,13 +42,13 @@ class Adapter(Protocol):
     def embed(self, x: np.ndarray) -> np.ndarray: ...
 
 
-_REGISTRY: dict[str, Callable[[], Adapter]] = {}
+_REGISTRY: dict[str, Callable[[Path], Adapter]] = {}
 
 
 def register(spec: str) -> Callable:
     """Decorator: ``@register("my-model")`` makes ``--model my-model`` build it."""
 
-    def wrap(factory: Callable[[], Adapter]) -> Callable[[], Adapter]:
+    def wrap(factory: Callable[[Path], Adapter]) -> Callable[[Path], Adapter]:
         _REGISTRY[spec] = factory
         return factory
 
@@ -57,14 +61,15 @@ def available() -> list[str]:
 
 
 def _load_builtins() -> None:
-    from . import birdnet_pkg, mel  # noqa: F401  (registration side effect)
+    from . import birdnet_zenodo, mel  # noqa: F401  (registration side effect)
 
 
-def from_spec(spec: str) -> Adapter:
-    """Build the adapter a ``--model`` spec names (downloads weights on first use)."""
+def from_spec(spec: str, models_dir: str | Path = "models") -> Adapter:
+    """Build the adapter a ``--model`` spec names; model files are downloaded into
+    ``models_dir`` on first use."""
     _load_builtins()
     if spec in _REGISTRY:
-        return _REGISTRY[spec]()
+        return _REGISTRY[spec](Path(models_dir))
     if spec.startswith("torchscript:"):
         from .torchscript import TorchScriptAdapter
 

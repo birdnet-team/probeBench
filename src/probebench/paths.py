@@ -6,6 +6,7 @@ Everything lives under one data root: ``--data`` on the command line, else the
     <root>/raw/<dataset>/            downloads (archives are extracted to extracted/)
     <root>/tasks/<task>/task.json    what the task is and how it is scored
     <root>/tasks/<task>/manifest.parquet
+    <root>/models/                   model files downloaded on first use
     <root>/cache/<model>/<task>.npz  pooled clip embeddings
     <root>/results/<model>.json      per-task results of a probe run
     <root>/scores/<model>/<task>.npz test-split scores (for the PR figure)
@@ -34,6 +35,10 @@ class Paths:
     @property
     def tasks(self) -> Path:
         return self.root / "tasks"
+
+    @property
+    def models(self) -> Path:
+        return self.root / "models"
 
     @property
     def cache(self) -> Path:

@@ -1,10 +1,11 @@
 {
  "_meta": {
   "label": "BirdNET V2.4",
-  "model": "BirdNET V2.4 Global 6K SavedModel, 'embeddings' signature (1,024 values), 48 kHz, 3 s windows",
+  "model": "BirdNET V2.4 Global 6K (doi:10.5281/zenodo.15050749), GLOBAL_AVG_POOL embedding (1,024 values), 48 kHz, 3 s windows; computed with the SavedModel 'embeddings' signature, which matches the Zenodo TFLite file (cosine >= 0.999 on 261 windows)",
   "recipe": "windows of the model's input length, hop half a window; mean + max pooled per clip; standardized; class-balanced logistic regression, C in {0.001, 0.01, 0.1, 1, 10} chosen on val; refit on train + val; test scored once",
   "date": "2026-11",
-  "probebench": "0.1.0"
+  "probebench": "0.1.0",
+  "spec": "birdnet-v2.4"
  },
  "anafcc_flightcalls": {
   "headline": 0.7672,

@@ -36,13 +36,12 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-# BirdNET V3.0 (ONNX, no TensorFlow) through the birdnet package.
-birdnet = ["birdnet >= 1.4.0"]
-# BirdNET V2.4 through the birdnet package needs TensorFlow.
-birdnet-tf = ["birdnet[tf] >= 1.4.0"]
+v3 = ["onnxruntime >= 1.16"]
+v24 = ["ai-edge-litert >= 1.0"]
 torch = ["torch >= 2.0"]
+all = ["probebench[v3,v24]"]
 tests = ["pytest >= 8.0", "ruff == 0.15.10"]
-dev = ["probebench[tests,birdnet]"]
+dev = ["probebench[tests,v3,v24]"]
 
 [project.scripts]
 probebench = "probebench.cli:main"

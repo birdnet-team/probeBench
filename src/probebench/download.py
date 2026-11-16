@@ -15,8 +15,12 @@ from pathlib import Path
 import requests
 from tqdm import tqdm
 
+from . import __version__
+
 CHUNK = 1 << 20
 RETRIES = 5
+# Some hosts (Kaggle) refuse the default python-requests agent.
+HEADERS = {"User-Agent": f"probebench/{__version__}"}
 
 
 @dataclass(frozen=True)
@@ -35,7 +39,9 @@ def zenodo(
 ) -> list[Remote]:
     """The files of a public Zenodo record (``keep``: only names starting with one of
     these; ``drop``: skip names starting with one of these)."""
-    r = requests.get(f"https://zenodo.org/api/records/{record}", timeout=60)
+    r = requests.get(
+        f"https://zenodo.org/api/records/{record}", headers=HEADERS, timeout=60
+    )
     r.raise_for_status()
     out = []
     for f in r.json()["files"]:
@@ -67,7 +73,7 @@ def md5sum(path: Path) -> str:
 
 def _get(url: str, path: Path, size: int | None) -> None:
     have = path.stat().st_size if path.exists() else 0
-    headers = {"Range": f"bytes={have}-"} if have else {}
+    headers = {**HEADERS, "Range": f"bytes={have}-"} if have else HEADERS
     with requests.get(url, headers=headers, stream=True, timeout=120) as r:
         if have and r.status_code == 200:  # no range support: start over
             have = 0

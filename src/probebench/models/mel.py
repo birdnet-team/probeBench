@@ -4,6 +4,8 @@ shortest complete example of an adapter."""
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import numpy as np
 
 from . import register
@@ -33,5 +35,5 @@ class MelBaseline:
 
 
 @register("mel")
-def make() -> MelBaseline:
+def make(models_dir: Path) -> MelBaseline:
     return MelBaseline()
