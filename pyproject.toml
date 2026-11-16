@@ -41,6 +41,10 @@ v24 = ["ai-edge-litert >= 1.0"]
 perch = ["tensorflow >= 2.18"]
 torch = ["torch >= 2.0"]
 audioprotopnet = ["torch >= 2.0", "torchaudio >= 2.0", "transformers >= 4.40"]
+birdcode = [
+    "torch >= 2.0",
+    "sound-event-detection @ git+https://github.com/earthspecies/sound-event-detection@617c6408fdd1b56c3873ef2d17006ffbaee61783",
+]
 all = ["probebench[v3,v24,perch]"]
 tests = ["pytest >= 8.0", "ruff == 0.15.10"]
 dev = ["probebench[tests,v3,v24]"]

@@ -46,6 +46,8 @@ cd probeBench
 pip install -e ".[v3]"       # BirdNET+ V3.0 (onnxruntime)
 pip install -e ".[v24]"      # BirdNET V2.4 (ai-edge-litert)
 pip install -e ".[perch]"    # Perch 2.0 (TensorFlow)
+pip install -e ".[audioprotopnet]"  # AudioProtoPNet-20 (torch, CUDA GPU)
+pip install -e ".[birdcode]" # BirdCODE (torch, CUDA GPU, Python >= 3.12)
 pip install -e ".[all]"      # all three
 ```
 
@@ -85,6 +87,7 @@ All data goes under one root: `--data <dir>`, else `$PROBEBENCH_DATA`, else
 | `birdnet-v2.4` | BirdNET V2.4 Global 6K, FP32 TFLite | [10.5281/zenodo.15050749](https://doi.org/10.5281/zenodo.15050749) | ai-edge-litert | 48 kHz, 3 s | `GLOBAL_AVG_POOL` tensor, 1,024 | CC BY-NC 4.0 |
 | `perch-v2` | Perch 2.0 (Google DeepMind), TensorFlow SavedModel | [Kaggle: google/bird-vocalization-classifier](https://www.kaggle.com/models/google/bird-vocalization-classifier) (`perch_v2` v2 for GPU, `perch_v2_cpu` v1) | TensorFlow | 32 kHz, 5 s | `embedding` output, 1,536 | Apache-2.0 |
 | `audioprotopnet-20` | AudioProtoPNet-20 BirdSet XCL (ConvNeXt-base + prototype head) | [Hugging Face: DBD-research-group/AudioProtoPNet-20-BirdSet-XCL](https://huggingface.co/DBD-research-group/AudioProtoPNet-20-BirdSet-XCL) | torch + transformers (GPU) | 32 kHz, 5 s | encoder feature map, global average, 1,024 | CC BY-NC 4.0 |
+| `birdcode` | BirdCODE (Earth Species Project), ConvNeXt sound event detector | [Hugging Face: EarthSpeciesProject/sed-birdcode](https://huggingface.co/EarthSpeciesProject/sed-birdcode) | torch + [sound-event-detection](https://github.com/earthspecies/sound-event-detection) (GPU, Python >= 3.12) | 32 kHz, 5 s | encoder feature map, global average, 2,048 | MIT |
 | `mel` | log-mel mean and standard deviation (no learning) | - | numpy / librosa | 24 kHz, 2.5 s | 256 | - |
 | `torchscript:<file.pt>` | any TorchScript model returning `(scores, embeddings)` | your file | torch (`.[torch]`) | 32 kHz, 3 s by default | second output | yours |
 | `py:<module>:<factory>` | your own adapter | your code | yours | yours | yours | yours |
@@ -93,14 +96,16 @@ The BirdNET files are fetched from Zenodo with the record's MD5 checked, Perch 2
 anonymously from Kaggle Models with the archive's size and MD5 pinned. BirdNET V2.4
 is licensed CC BY-NC 4.0: non-commercial use only.
 
-Prototype models (`audioprotopnet-20`) are probed at the
-encoder: the global average of the ConvNeXt feature map their prototype layer
-compares with its prototypes. Their prototype similarities and class scores are
-trained to their own classes, so the encoder feature is the
-representation comparable to the other models' embeddings. They need a CUDA GPU
+The ConvNeXt models (`audioprotopnet-20`, `birdcode`) are probed at the encoder:
+the global average of the ConvNeXt feature map that their prototype or detection
+head reads. Their prototype similarities and class scores are trained to their own
+classes, so the encoder feature is the representation comparable to the other
+models' embeddings. They need a CUDA GPU
 (fp16 autocast, batch `PROBEBENCH_TORCH_BATCH`, default 2); their Hugging Face
 files go to `<data>/models/huggingface` unless `HF_HUB_CACHE` is set. Install:
-`pip install -e ".[audioprotopnet]"` for AudioProtoPNet. AudioProtoPNet:
+`pip install -e ".[audioprotopnet]"` for AudioProtoPNet, `pip install -e ".[birdcode]"`
+for BirdCODE (installs `sound-event-detection` from GitHub at a pinned commit).
+AudioProtoPNet:
 Heinrich et al. 2025, "AudioProtoPNet: An interpretable deep learning model for
 bird sound classification", Ecological Informatics. Perch 2.0: van Merriënboer et
 al. 2025, "Perch 2.0: The Bittern Lesson for Bioacoustics".
@@ -110,24 +115,24 @@ al. 2025, "Perch 2.0: The Bittern Lesson for Bioacoustics".
 Headline metric per task on the test split (accuracy, macro-F1, macro mAP or AUC;
 higher is better); the mean is over all 15 tasks.
 
-| Task | Metric | BirdNET+ V3.0 | BirdNET V2.4 | Perch 2.0 | AudioProtoPNet-20 | Mel baseline |
-|---|---|---:|---:|---:|---:|---:|
-| anafcc_flightcalls | macro_f1 | 0.901 | 0.767 | 0.899 | 0.927 | 0.486 |
-| chiffchaff_acrossyear | accuracy | 0.105 | 0.175 | 0.210 | 0.095 | 0.175 |
-| chiffchaff_withinyear | accuracy | 0.623 | 0.685 | 0.761 | 0.716 | 0.492 |
-| chiroset_bats | macro_f1 | 0.769 | 0.835 | 0.886 | 0.895 | 0.647 |
-| dog_individual | accuracy | 0.914 | 0.957 | 0.940 | 0.957 | 0.862 |
-| edansa_arctic | map | 0.818 | 0.800 | 0.816 | 0.813 | 0.653 |
-| esc50 | accuracy | 0.880 | 0.809 | 0.906 | 0.828 | 0.453 |
-| fruit_bat_individual | accuracy | 0.758 | 0.790 | 0.815 | 0.773 | 0.735 |
-| hainan_gibbon | auc | 0.909 | 0.766 | 0.765 | 0.919 | 0.801 |
-| hiceas_minke | auc | 0.978 | 0.946 | 0.956 | 0.967 | 0.892 |
-| humbugdb_species | map | 0.560 | 0.646 | 0.634 | 0.599 | 0.525 |
-| insectset66 | accuracy | 0.923 | 0.883 | 0.937 | 0.860 | 0.640 |
-| right_whale_upcall | auc | 0.959 | 0.913 | 0.941 | 0.967 | 0.897 |
-| watkins | accuracy | 0.613 | 0.648 | 0.628 | 0.573 | 0.402 |
-| zebra_finch_calltype | macro_f1 | 0.649 | 0.658 | 0.714 | 0.725 | 0.559 |
-| **Mean (15 tasks)** | | **0.757** | **0.752** | **0.787** | **0.774** | **0.615** |
+| Task | Metric | BirdNET+ V3.0 | BirdNET V2.4 | Perch 2.0 | AudioProtoPNet-20 | BirdCODE | Mel baseline |
+|---|---|---:|---:|---:|---:|---:|---:|
+| anafcc_flightcalls | macro_f1 | 0.901 | 0.767 | 0.899 | 0.927 | 0.933 | 0.486 |
+| chiffchaff_acrossyear | accuracy | 0.105 | 0.175 | 0.210 | 0.095 | 0.125 | 0.175 |
+| chiffchaff_withinyear | accuracy | 0.623 | 0.685 | 0.761 | 0.716 | 0.737 | 0.492 |
+| chiroset_bats | macro_f1 | 0.769 | 0.835 | 0.886 | 0.895 | 0.734 | 0.647 |
+| dog_individual | accuracy | 0.914 | 0.957 | 0.940 | 0.957 | 0.871 | 0.862 |
+| edansa_arctic | map | 0.818 | 0.800 | 0.816 | 0.813 | 0.791 | 0.653 |
+| esc50 | accuracy | 0.880 | 0.809 | 0.906 | 0.828 | 0.622 | 0.453 |
+| fruit_bat_individual | accuracy | 0.758 | 0.790 | 0.815 | 0.773 | 0.767 | 0.735 |
+| hainan_gibbon | auc | 0.909 | 0.766 | 0.765 | 0.919 | 0.903 | 0.801 |
+| hiceas_minke | auc | 0.978 | 0.946 | 0.956 | 0.967 | 0.967 | 0.892 |
+| humbugdb_species | map | 0.560 | 0.646 | 0.634 | 0.599 | 0.589 | 0.525 |
+| insectset66 | accuracy | 0.923 | 0.883 | 0.937 | 0.860 | 0.737 | 0.640 |
+| right_whale_upcall | auc | 0.959 | 0.913 | 0.941 | 0.967 | 0.963 | 0.897 |
+| watkins | accuracy | 0.613 | 0.648 | 0.628 | 0.573 | 0.548 | 0.402 |
+| zebra_finch_calltype | macro_f1 | 0.649 | 0.658 | 0.714 | 0.725 | 0.641 | 0.559 |
+| **Mean (15 tasks)** | | **0.757** | **0.752** | **0.787** | **0.774** | **0.728** | **0.615** |
 
 ![Mean and per-task precision-recall curves](results/probe_bench_pr.png)
 
@@ -141,11 +146,13 @@ the table within 0.01 (V3.0 0.888 and 0.613, V2.4 0.809 and 0.658).
 
 Perch 2.0 has the best mean headline metric (0.787), AudioProtoPNet-20 is second
 (0.774) and has the best mean average precision in the figure (0.802); BirdNET+
-V3.0 and V2.4 tie (0.757 and 0.752). Perch 2.0 leads on individual identity and
-species tasks (chiffchaffs, fruit bats, ESC-50, insects), AudioProtoPNet-20 on
-flight calls, bats, gibbons, right whales and zebra finch call types, V3.0 on
-Arctic soundscapes and minke whales, and V2.4 on dogs (tied), mosquitoes and
-marine mammal species.
+V3.0 and V2.4 tie (0.757 and 0.752), and BirdCODE follows (0.728). Perch 2.0 leads
+on individual identity and species tasks (chiffchaffs, fruit bats, ESC-50,
+insects), AudioProtoPNet-20 on bats, gibbons, right whales and zebra finch call
+types, BirdCODE on flight calls, V3.0 on Arctic soundscapes and minke whales, and
+V2.4 on dogs (tied), mosquitoes and marine mammal species. BirdCODE is close to the
+best on bird and whale calls but weaker on general sound and insects (ESC-50 0.622,
+InsectSet66 0.737).
 
 ## Tasks
 

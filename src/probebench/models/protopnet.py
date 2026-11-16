@@ -1,6 +1,6 @@
 """ConvNeXt encoders with a prototype head, probed at the encoder: the global average
-of the ConvNeXt feature map that the prototype layer compares with its prototypes
-(1,024 values), not the prototype similarities or class scores, so the probe sees
+of the ConvNeXt feature map that the prototype or detection head reads (1,024 values for
+AudioProtoPNet-20, 2,048 for BirdCODE), not the prototype similarities or class scores, so the probe sees
 the same kind of representation as for the other models.
 
     audioprotopnet-20  AudioProtoPNet-20 BirdSet XCL (Heinrich et al. 2025),
