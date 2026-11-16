@@ -1,0 +1,24 @@
+name: New task, model or feature
+description: Propose a task, a model adapter or another improvement.
+labels: ["enhancement"]
+body:
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What is it?
+      options:
+        - New task (dataset)
+        - New model adapter
+        - Other feature
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: Details
+      description: >
+        For a task: the dataset, where it is hosted, its license, what is classified and
+        how the split can be grouped (recording, site, session, individual). For a model:
+        where the weights are, input rate and window, and the embedding output.
+    validations:
+      required: true

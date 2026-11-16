@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: BirdNET models and inference
+    url: https://github.com/birdnet-team/birdnet
+    about: Questions about the BirdNET models themselves belong to the birdnet package.

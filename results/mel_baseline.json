@@ -1,0 +1,279 @@
+{
+ "_meta": {
+  "label": "Mel baseline",
+  "model": "mean and standard deviation of a 128-band log-mel spectrogram, 24 kHz, 2.5 s windows",
+  "recipe": "windows of the model's input length, hop half a window; mean + max pooled per clip; standardized; class-balanced logistic regression, C in {0.001, 0.01, 0.1, 1, 10} chosen on val; refit on train + val; test scored once",
+  "date": "2026-11",
+  "probebench": "0.1.0"
+ },
+ "anafcc_flightcalls": {
+  "headline": 0.4858,
+  "metric": "macro_f1",
+  "C": 10.0,
+  "val": 0.426,
+  "test": {
+   "accuracy": 0.5114,
+   "macro_f1": 0.4858,
+   "map": 0.5251
+  },
+  "n": {
+   "train": 9655,
+   "val": 3085,
+   "test": 3162
+  },
+  "kind": "multiclass",
+  "classes": 14
+ },
+ "chiffchaff_acrossyear": {
+  "headline": 0.175,
+  "metric": "accuracy",
+  "C": 0.1,
+  "val": 1.0,
+  "test": {
+   "accuracy": 0.175,
+   "macro_f1": 0.1063,
+   "map": 0.2088
+  },
+  "n": {
+   "train": 261,
+   "val": 63,
+   "test": 200
+  },
+  "kind": "multiclass",
+  "classes": 10
+ },
+ "chiffchaff_withinyear": {
+  "headline": 0.4925,
+  "metric": "accuracy",
+  "C": 10.0,
+  "val": 0.9511,
+  "test": {
+   "accuracy": 0.4925,
+   "macro_f1": 0.4115,
+   "map": 0.5522
+  },
+  "n": {
+   "train": 4084,
+   "val": 1023,
+   "test": 1131
+  },
+  "kind": "multiclass",
+  "classes": 13
+ },
+ "chiroset_bats": {
+  "headline": 0.6475,
+  "metric": "macro_f1",
+  "C": 1.0,
+  "val": 0.6602,
+  "test": {
+   "accuracy": 0.692,
+   "macro_f1": 0.6475,
+   "map": 0.7378
+  },
+  "n": {
+   "train": 981,
+   "val": 234,
+   "test": 250
+  },
+  "kind": "multiclass",
+  "classes": 16
+ },
+ "dog_individual": {
+  "headline": 0.8621,
+  "metric": "accuracy",
+  "C": 1.0,
+  "val": 0.8261,
+  "test": {
+   "accuracy": 0.8621,
+   "macro_f1": 0.8447,
+   "map": 0.9421
+  },
+  "n": {
+   "train": 462,
+   "val": 115,
+   "test": 116
+  },
+  "kind": "multiclass",
+  "classes": 10
+ },
+ "edansa_arctic": {
+  "headline": 0.6535,
+  "metric": "map",
+  "C": 0.01,
+  "val": 0.5932,
+  "test": {
+   "map": 0.6535,
+   "macro_f1": 0.5701,
+   "auc": 0.8806
+  },
+  "n": {
+   "train": 6645,
+   "val": 1873,
+   "test": 2253
+  },
+  "kind": "multilabel",
+  "classes": 14
+ },
+ "esc50": {
+  "headline": 0.4532,
+  "metric": "accuracy",
+  "C": 0.1,
+  "val": 0.5402,
+  "test": {
+   "accuracy": 0.4532,
+   "macro_f1": 0.4105,
+   "map": 0.5013
+  },
+  "n": {
+   "train": 792,
+   "val": 261,
+   "test": 267
+  },
+  "kind": "multiclass",
+  "classes": 50
+ },
+ "fruit_bat_individual": {
+  "headline": 0.7347,
+  "metric": "accuracy",
+  "C": 0.1,
+  "val": 0.7293,
+  "test": {
+   "accuracy": 0.7347,
+   "macro_f1": 0.7352,
+   "map": 0.8029
+  },
+  "n": {
+   "train": 6261,
+   "val": 1847,
+   "test": 1892
+  },
+  "kind": "multiclass",
+  "classes": 10
+ },
+ "hainan_gibbon": {
+  "headline": 0.8009,
+  "metric": "auc",
+  "C": 0.001,
+  "val": 0.8569,
+  "test": {
+   "auc": 0.8009,
+   "map": 0.4502,
+   "accuracy": 0.8544
+  },
+  "n": {
+   "train": 6642,
+   "val": 1572,
+   "test": 2088
+  },
+  "kind": "detection",
+  "classes": 2
+ },
+ "hiceas_minke": {
+  "headline": 0.8917,
+  "metric": "auc",
+  "C": 10.0,
+  "val": 0.8069,
+  "test": {
+   "auc": 0.8917,
+   "map": 0.5809,
+   "accuracy": 0.8814
+  },
+  "n": {
+   "train": 408,
+   "val": 151,
+   "test": 118
+  },
+  "kind": "detection",
+  "classes": 2
+ },
+ "humbugdb_species": {
+  "headline": 0.5254,
+  "metric": "map",
+  "C": 0.01,
+  "val": 0.4521,
+  "test": {
+   "accuracy": 0.7704,
+   "macro_f1": 0.5067,
+   "map": 0.5254
+  },
+  "n": {
+   "train": 3037,
+   "val": 904,
+   "test": 884
+  },
+  "kind": "multiclass",
+  "classes": 9
+ },
+ "insectset66": {
+  "headline": 0.6403,
+  "metric": "accuracy",
+  "C": 10.0,
+  "val": 0.5769,
+  "test": {
+   "accuracy": 0.6403,
+   "macro_f1": 0.6158,
+   "map": 0.7129
+  },
+  "n": {
+   "train": 1752,
+   "val": 579,
+   "test": 556
+  },
+  "kind": "multiclass",
+  "classes": 66
+ },
+ "right_whale_upcall": {
+  "headline": 0.8966,
+  "metric": "auc",
+  "C": 1.0,
+  "val": 0.8998,
+  "test": {
+   "auc": 0.8966,
+   "map": 0.6657,
+   "accuracy": 0.8097
+  },
+  "n": {
+   "train": 19201,
+   "val": 4799,
+   "test": 6000
+  },
+  "kind": "detection",
+  "classes": 2
+ },
+ "watkins": {
+  "headline": 0.402,
+  "metric": "accuracy",
+  "C": 1.0,
+  "val": 0.4925,
+  "test": {
+   "accuracy": 0.402,
+   "macro_f1": 0.322,
+   "map": 0.3647
+  },
+  "n": {
+   "train": 882,
+   "val": 268,
+   "test": 199
+  },
+  "kind": "multiclass",
+  "classes": 23
+ },
+ "zebra_finch_calltype": {
+  "headline": 0.5589,
+  "metric": "macro_f1",
+  "C": 1.0,
+  "val": 0.5815,
+  "test": {
+   "accuracy": 0.6547,
+   "macro_f1": 0.5589,
+   "map": 0.6362
+  },
+  "n": {
+   "train": 1312,
+   "val": 827,
+   "test": 472
+  },
+  "kind": "multiclass",
+  "classes": 13
+ }
+}

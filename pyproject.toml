@@ -1,0 +1,72 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "probebench"
+version = "0.1.0"
+description = "Linear-probe benchmark for bioacoustic audio embeddings on tasks unseen by the models."
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "BirdNET-Team" }]
+keywords = ["bioacoustics", "embeddings", "linear probe", "benchmark", "birdnet"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+  "numpy >= 1.24",
+  "pandas >= 2.0",
+  "pyarrow >= 14",
+  "scikit-learn >= 1.3",
+  "soundfile >= 0.12",
+  "soxr >= 0.3",
+  "librosa >= 0.10",
+  "requests >= 2.28",
+  "tqdm >= 4.64",
+  "matplotlib >= 3.7",
+  "h5py >= 3.8",
+]
+
+[project.optional-dependencies]
+# BirdNET V3.0 (ONNX, no TensorFlow) through the birdnet package.
+birdnet = ["birdnet >= 1.4.0"]
+# BirdNET V2.4 through the birdnet package needs TensorFlow.
+birdnet-tf = ["birdnet[tf] >= 1.4.0"]
+torch = ["torch >= 2.0"]
+tests = ["pytest >= 8.0", "ruff == 0.15.10"]
+dev = ["probebench[tests,birdnet]"]
+
+[project.scripts]
+probebench = "probebench.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/birdnet-team/probeBench"
+Issues = "https://github.com/birdnet-team/probeBench/issues"
+Repository = "https://github.com/birdnet-team/probeBench.git"
+Changelog = "https://github.com/birdnet-team/probeBench/blob/main/CHANGELOG.md"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+probebench = ["datasets/*.txt"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "B", "C4", "PIE", "SIM", "UP", "NPY", "PERF", "RUF"]
+# The formatter owns line length; long literals (URLs, citations) stay on one line.
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
