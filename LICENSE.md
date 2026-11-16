@@ -1,6 +1,12 @@
-MIT License
+# MIT License
 
-Copyright (c) 2026 BirdNET-Team
+Copyright (c) 2026 birdnet-team
+
+This license covers the source code and the published results in this repository.
+The datasets the benchmark downloads are not part of the repository and keep their
+own licenses, which each task records in its `task.json` (several are
+non-commercial or academic-use only). Models evaluated with the benchmark keep
+their own licenses as well.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

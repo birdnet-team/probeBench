@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+title: "probeBench: A linear-probe benchmark for bioacoustic audio embeddings"
+message: >-
+  If you use this software, please cite it using the metadata from this file,
+  and cite the datasets behind the tasks you report (see each task's task.json).
+type: software
+version: 0.1.0
+authors:
+  - family-names: Kahl
+    given-names: Stefan
+    affiliation: Cornell University / Chemnitz University of Technology
+    orcid: "https://orcid.org/0000-0002-2411-8877"
+repository-code: "https://github.com/birdnet-team/probeBench"
+license: MIT
+keywords:
+  - bioacoustics
+  - audio embeddings
+  - linear probe
+  - benchmark
+  - transfer learning
+  - BirdNET

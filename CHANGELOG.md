@@ -15,3 +15,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   for BirdNET V3.0 and V2.4 (through the `birdnet` package), TorchScript models and
   a mel baseline, the `probebench` command line, and reference results for
   BirdNET+ V3.0 (12K release), BirdNET V2.4 and the mel baseline.
+- Project scaffolding: LICENSE.md with the data and model license scope,
+  CITATION.cff, code of conduct, security and acceptable-use policies,
+  pre-commit hooks, and the README's license, citation, funding and partner sections.

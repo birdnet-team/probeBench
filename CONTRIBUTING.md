@@ -46,3 +46,8 @@ settings used.
 
 Keep them focused, describe what changed and why, and add a `CHANGELOG.md` entry
 for user-facing changes. CI runs ruff and pytest.
+
+## Code of Conduct
+
+This project follows the [Contributor Covenant](CODE_OF_CONDUCT.md). Please
+read it before participating.

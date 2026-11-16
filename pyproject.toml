@@ -9,7 +9,7 @@ description = "Linear-probe benchmark for bioacoustic audio embeddings on tasks 
 readme = "README.md"
 requires-python = ">=3.11"
 license = "MIT"
-license-files = ["LICENSE"]
+license-files = ["LICENSE.md"]
 authors = [{ name = "BirdNET-Team" }]
 keywords = ["bioacoustics", "embeddings", "linear probe", "benchmark", "birdnet"]
 classifiers = [

@@ -1,5 +1,13 @@
 # probeBench
 
+<p align="center">
+  <img src="birdnet-logo.png" alt="BirdNET" width="250"><br>
+  <a href="LICENSE.md"><img src="https://img.shields.io/badge/code-MIT-green.svg" alt="Code license: MIT"></a>
+  <a href="https://www.python.org/downloads/"><img src="https://img.shields.io/badge/python-3.11%2B-blue.svg?logo=python&logoColor=white" alt="Python 3.11+"></a>
+  <a href="https://github.com/birdnet-team/probeBench/actions/workflows/ci.yml"><img src="https://github.com/birdnet-team/probeBench/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI"></a>
+  <img src="https://img.shields.io/badge/tasks-15-orange.svg" alt="15 tasks">
+</p>
+
 A linear-probe benchmark for bioacoustic audio embeddings. It measures how well a
 frozen embedding model transfers to tasks it was not trained for: marine mammals,
 bats, insects, individual animals, call types, soundscape tags and environmental
@@ -204,5 +212,39 @@ recording, session or individual spans train and test.
 
 ## License
 
-The code is MIT licensed (see `LICENSE`). The datasets keep their own licenses,
-recorded in each task's `task.json`.
+- **Source code and published results**: [MIT License](LICENSE.md)
+- **Datasets**: not part of this repository; probeBench downloads them from their
+  original hosts, and each keeps its own license, recorded in its task's `task.json`.
+  Several are non-commercial or academic-use only.
+- **Models**: each evaluated model keeps its own license (for BirdNET, see the
+  [`birdnet` package](https://github.com/birdnet-team/birdnet)).
+
+## Citation
+
+If you use probeBench, please cite it using [CITATION.cff](CITATION.cff) and cite
+the datasets behind the tasks you report (each task's `task.json` lists its citation).
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines. New models and tasks are
+welcome; AI-assisted contributions too, keep PRs focused and review every line.
+
+## Acceptable Use
+
+BirdNET is built to support biodiversity research and conservation. See
+[ACCEPTABLE_USE.md](ACCEPTABLE_USE.md) for how we expect the code to be used,
+including uses we consider unacceptable and guidance on branding derivative work.
+
+## Funding
+
+Our work in the Cornell K. Lisa Yang Center for Conservation Bioacoustics is made possible by the generosity of K. Lisa Yang to advance innovative conservation technologies to inspire and inform the conservation of wildlife and habitats.
+
+The development of BirdNET is supported by the German Federal Ministry of Research, Technology and Space (FKZ 01|S22072), the German Federal Ministry for the Environment, Climate Action, Nature Conservation and Nuclear Safety (FKZ 67KI31040E), the German Federal Ministry of Economic Affairs and Energy (FKZ 16KN095550), the Deutsche Bundesstiftung Umwelt (project 39263/01) and the European Social Fund.
+
+## Partners
+
+BirdNET is a joint effort of partners from academia and industry.
+Without these partnerships, this project would not have been possible.
+Thank you!
+
+![Logos of all partners](https://tuc.cloud/index.php/s/KSdWfX5CnSRpRgQ/download/box_logos.png)
