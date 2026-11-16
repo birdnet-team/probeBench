@@ -10,7 +10,7 @@ import numpy as np
 
 # Categorical slots in fixed order (validated for color-vision deficiency on a light
 # surface); the mel baseline is always the gray dashed reference.
-COLORS = ("#2a78d6", "#eb6834", "#1baf7a", "#6250d6")
+COLORS = ("#2a78d6", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#008300")
 BASELINE = ("#52514e", "--")
 SURFACE, INK, INK2, GRID = "#fcfcfb", "#0b0b0b", "#52514e", "#e4e3df"
 R = np.linspace(0, 1, 101)

@@ -9,7 +9,9 @@ from probebench.models import birdnet_zenodo as bz
 
 
 def test_builtin_specs_are_registered():
-    assert {"mel", "birdnet-v3.0", "birdnet-v2.4"} <= set(models.available())
+    assert {"mel", "birdnet-v3.0", "birdnet-v2.4", "perch-v2"} <= set(
+        models.available()
+    )
     with pytest.raises(ValueError, match="unknown model"):
         models.from_spec("no-such-model")
 

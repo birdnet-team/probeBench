@@ -12,6 +12,7 @@ Built-in specs for ``probebench run --model``:
     mel                      log-mel statistics, no learning (the floor)
     birdnet-v3.0             BirdNET+ V3.0 12K from Zenodo (ONNX, onnxruntime)
     birdnet-v2.4             BirdNET V2.4 from Zenodo (TFLite, ai-edge-litert)
+    perch-v2                 Perch 2.0 from Kaggle Models (TensorFlow SavedModel)
     torchscript:<file.pt>    a TorchScript model taking raw audio and returning
                              (scores, embeddings), e.g. a BirdNET+ V3.0 release file
     py:<module>:<factory>    your own: ``factory()`` returns an adapter
@@ -61,7 +62,7 @@ def available() -> list[str]:
 
 
 def _load_builtins() -> None:
-    from . import birdnet_zenodo, mel  # noqa: F401  (registration side effect)
+    from . import birdnet_zenodo, mel, perch  # noqa: F401  (registration side effect)
 
 
 def from_spec(spec: str, models_dir: str | Path = "models") -> Adapter:

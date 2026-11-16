@@ -45,11 +45,13 @@ git clone https://github.com/birdnet-team/probeBench.git
 cd probeBench
 pip install -e ".[v3]"       # BirdNET+ V3.0 (onnxruntime)
 pip install -e ".[v24]"      # BirdNET V2.4 (ai-edge-litert)
-pip install -e ".[all]"      # both
+pip install -e ".[perch]"    # Perch 2.0 (TensorFlow)
+pip install -e ".[all]"      # all three
 ```
 
-The base install (mel baseline, data, probe) needs neither runtime. Everything runs
-on the CPU; `PROBEBENCH_THREADS` sets the model threads (default 4).
+The base install (mel baseline, data, probe) needs none of these runtimes. The
+BirdNET models run on the CPU (`PROBEBENCH_THREADS` threads, default 4); Perch 2.0
+uses a GPU when TensorFlow sees one (`PROBEBENCH_TF_GPU_MB` caps its memory).
 
 ## Quickstart
 
@@ -81,50 +83,56 @@ All data goes under one root: `--data <dir>`, else `$PROBEBENCH_DATA`, else
 |---|---|---|---|---|---|---|
 | `birdnet-v3.0` | BirdNET+ V3.0 Global 12K, FP32 ONNX | [10.5281/zenodo.24162518](https://doi.org/10.5281/zenodo.24162518) | onnxruntime | 32 kHz, 3 s | `embeddings` output, 1,280 | Apache-2.0 |
 | `birdnet-v2.4` | BirdNET V2.4 Global 6K, FP32 TFLite | [10.5281/zenodo.15050749](https://doi.org/10.5281/zenodo.15050749) | ai-edge-litert | 48 kHz, 3 s | `GLOBAL_AVG_POOL` tensor, 1,024 | CC BY-NC 4.0 |
+| `perch-v2` | Perch 2.0 (Google DeepMind), TensorFlow SavedModel | [Kaggle: google/bird-vocalization-classifier](https://www.kaggle.com/models/google/bird-vocalization-classifier) (`perch_v2` v2 for GPU, `perch_v2_cpu` v1) | TensorFlow | 32 kHz, 5 s | `embedding` output, 1,536 | Apache-2.0 |
 | `mel` | log-mel mean and standard deviation (no learning) | - | numpy / librosa | 24 kHz, 2.5 s | 256 | - |
 | `torchscript:<file.pt>` | any TorchScript model returning `(scores, embeddings)` | your file | torch (`.[torch]`) | 32 kHz, 3 s by default | second output | yours |
 | `py:<module>:<factory>` | your own adapter | your code | yours | yours | yours | yours |
 
-The BirdNET files are fetched from Zenodo with the record's MD5 checked. BirdNET
-V2.4 is licensed CC BY-NC 4.0: non-commercial use only.
+The BirdNET files are fetched from Zenodo with the record's MD5 checked, Perch 2.0
+anonymously from Kaggle Models with the archive's size and MD5 pinned. BirdNET V2.4
+is licensed CC BY-NC 4.0: non-commercial use only. Perch 2.0: van Merriënboer et
+al. 2025, "Perch 2.0: The Bittern Lesson for Bioacoustics".
 
 ## Results
 
 Headline metric per task on the test split (accuracy, macro-F1, macro mAP or AUC;
-higher is better). The mean is over the 14 tasks all three models have.
+higher is better). The mean is over the 14 tasks all models have (the V3.0
+right-whale run is still missing).
 
-| Task | Metric | BirdNET+ V3.0 | BirdNET V2.4 | Mel baseline |
-|---|---|---:|---:|---:|
-| anafcc_flightcalls | macro_f1 | 0.901 | 0.767 | 0.486 |
-| chiffchaff_acrossyear | accuracy | 0.105 | 0.175 | 0.175 |
-| chiffchaff_withinyear | accuracy | 0.623 | 0.685 | 0.492 |
-| chiroset_bats | macro_f1 | 0.769 | 0.835 | 0.647 |
-| dog_individual | accuracy | 0.914 | 0.957 | 0.862 |
-| edansa_arctic | map | 0.818 | 0.800 | 0.653 |
-| esc50 | accuracy | 0.880 | 0.809 | 0.453 |
-| fruit_bat_individual | accuracy | 0.758 | 0.790 | 0.735 |
-| hainan_gibbon | auc | 0.909 | 0.766 | 0.801 |
-| hiceas_minke | auc | 0.978 | 0.946 | 0.892 |
-| humbugdb_species | map | 0.560 | 0.646 | 0.525 |
-| insectset66 | accuracy | 0.923 | 0.883 | 0.640 |
-| right_whale_upcall | auc | - | 0.913 | 0.897 |
-| watkins | accuracy | 0.613 | 0.648 | 0.402 |
-| zebra_finch_calltype | macro_f1 | 0.649 | 0.658 | 0.559 |
-| **Mean (14 tasks)** | | **0.743** | **0.740** | **0.595** |
+| Task | Metric | BirdNET+ V3.0 | BirdNET V2.4 | Perch 2.0 | Mel baseline |
+|---|---|---:|---:|---:|---:|
+| anafcc_flightcalls | macro_f1 | 0.901 | 0.767 | 0.899 | 0.486 |
+| chiffchaff_acrossyear | accuracy | 0.105 | 0.175 | 0.210 | 0.175 |
+| chiffchaff_withinyear | accuracy | 0.623 | 0.685 | 0.761 | 0.492 |
+| chiroset_bats | macro_f1 | 0.769 | 0.835 | 0.886 | 0.647 |
+| dog_individual | accuracy | 0.914 | 0.957 | 0.940 | 0.862 |
+| edansa_arctic | map | 0.818 | 0.800 | 0.816 | 0.653 |
+| esc50 | accuracy | 0.880 | 0.809 | 0.906 | 0.453 |
+| fruit_bat_individual | accuracy | 0.758 | 0.790 | 0.815 | 0.735 |
+| hainan_gibbon | auc | 0.909 | 0.766 | 0.765 | 0.801 |
+| hiceas_minke | auc | 0.978 | 0.946 | 0.956 | 0.892 |
+| humbugdb_species | map | 0.560 | 0.646 | 0.634 | 0.525 |
+| insectset66 | accuracy | 0.923 | 0.883 | 0.937 | 0.640 |
+| right_whale_upcall | auc | - | 0.913 | 0.941 | 0.897 |
+| watkins | accuracy | 0.613 | 0.648 | 0.628 | 0.402 |
+| zebra_finch_calltype | macro_f1 | 0.649 | 0.658 | 0.714 | 0.559 |
+| **Mean (14 tasks)** | | **0.743** | **0.740** | **0.776** | **0.595** |
 
 ![Mean and per-task precision-recall curves](results/probe_bench_pr.png)
 
 The per-task numbers, chosen C values and split sizes are in [`results/`](results/).
-They were computed from other builds of the same two models (V3.0: the TorchScript
-release; V2.4: its SavedModel); on 261 real windows their embeddings match the
+Perch 2.0 was run with `perch-v2` itself. The two BirdNET columns were computed
+from other builds of the same models (V3.0: the TorchScript release; V2.4: its
+SavedModel); on 261 real windows their embeddings match the
 Zenodo files `birdnet-v3.0` and `birdnet-v2.4` load (cosine >= 0.9999 for V3.0 and
 >= 0.999 for V2.4), and a rerun of ESC-50 and Watkins with those specs reproduces
 the table within 0.01 (V3.0 0.888 and 0.613, V2.4 0.809 and 0.658).
 
-V3.0 and V2.4 tie on average with different strengths: V3.0 leads on general and
-soundscape sounds (ESC-50, EDANSA, gibbons, minke whales, insects) and flight calls;
-V2.4 leads on fine-grained individual and vocal tasks (dogs, chiffchaffs, bats,
-mosquitoes, marine mammal species).
+Perch 2.0 has the best mean (0.776) and leads on 8 of 15 tasks, most clearly on
+individual and call-type tasks (chiffchaffs, zebra finches, fruit bats) and bats.
+V3.0 and V2.4 tie on average with different strengths: V3.0 leads on soundscape
+detection (gibbons, minke whales) and is level with Perch on flight calls and
+Arctic soundscapes; V2.4 leads on dogs, mosquitoes and marine mammal species.
 
 ## Tasks
 
@@ -232,7 +240,8 @@ recording, session or individual spans train and test.
   original hosts, and each keeps its own license, recorded in its task's `task.json`.
   Several are non-commercial or academic-use only.
 - **Models**: not part of this repository; each keeps its own license (BirdNET+
-  V3.0: Apache-2.0; BirdNET V2.4: CC BY-NC 4.0, non-commercial use only).
+  V3.0: Apache-2.0; BirdNET V2.4: CC BY-NC 4.0, non-commercial use only; Perch
+  2.0: Apache-2.0).
 
 ## Citation
 
