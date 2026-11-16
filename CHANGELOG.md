@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Perch 2.0 adapter (`perch-v2`): Google's TensorFlow SavedModel from Kaggle Models,
   downloaded anonymously on first use (GPU or CPU variant), 5 s windows, 1,536-value
   embedding; extra `perch`. Perch 2.0 results for all 15 tasks are in `results/`.
+- AudioProtoPNet-20 BirdSet XCL adapter (`audioprotopnet-20`, Hugging Face, GPU), probed at the global-average-pooled ConvNeXt encoder output; results for all 15 tasks in `results/`.
 - Project scaffolding: LICENSE.md with the data and model license scope,
   CITATION.cff, code of conduct, security and acceptable-use policies,
   pre-commit hooks, and the README's license, citation, funding and partner sections.

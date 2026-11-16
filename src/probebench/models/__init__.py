@@ -62,7 +62,12 @@ def available() -> list[str]:
 
 
 def _load_builtins() -> None:
-    from . import birdnet_zenodo, mel, perch  # noqa: F401  (registration side effect)
+    from . import (  # noqa: F401  (registration side effect)
+        birdnet_zenodo,
+        mel,
+        perch,
+        protopnet,
+    )
 
 
 def from_spec(spec: str, models_dir: str | Path = "models") -> Adapter:

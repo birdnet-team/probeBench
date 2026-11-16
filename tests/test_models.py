@@ -9,9 +9,13 @@ from probebench.models import birdnet_zenodo as bz
 
 
 def test_builtin_specs_are_registered():
-    assert {"mel", "birdnet-v3.0", "birdnet-v2.4", "perch-v2"} <= set(
-        models.available()
-    )
+    assert {
+        "mel",
+        "birdnet-v3.0",
+        "birdnet-v2.4",
+        "perch-v2",
+        "audioprotopnet-20",
+    } <= set(models.available())
     with pytest.raises(ValueError, match="unknown model"):
         models.from_spec("no-such-model")
 
@@ -39,3 +43,14 @@ def test_zip_member_is_extracted_and_zip_removed(tmp_path, monkeypatch):
     out = bz.model_file(bz.V24, tmp_path)
     assert out.read_bytes() == b"tflite"
     assert not archive.exists()
+
+
+def test_hf_cache_defaults_to_the_models_folder(tmp_path, monkeypatch):
+    from probebench.models import protopnet
+
+    monkeypatch.delenv("HF_HUB_CACHE", raising=False)
+    protopnet._hf_cache(tmp_path)
+    assert protopnet.os.environ["HF_HUB_CACHE"] == str(tmp_path / "huggingface")
+    monkeypatch.setenv("HF_HUB_CACHE", "elsewhere")
+    protopnet._hf_cache(tmp_path)
+    assert protopnet.os.environ["HF_HUB_CACHE"] == "elsewhere"
