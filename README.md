@@ -100,15 +100,23 @@ The ConvNeXt models (`audioprotopnet-20`, `birdcode`) are probed at the encoder:
 the global average of the ConvNeXt feature map that their prototype or detection
 head reads. Their prototype similarities and class scores are trained to their own
 classes, so the encoder feature is the representation comparable to the other
-models' embeddings. They need a CUDA GPU
-(fp16 autocast, batch `PROBEBENCH_TORCH_BATCH`, default 2); their Hugging Face
-files go to `<data>/models/huggingface` unless `HF_HUB_CACHE` is set. Install:
-`pip install -e ".[audioprotopnet]"` for AudioProtoPNet, `pip install -e ".[birdcode]"`
-for BirdCODE (installs `sound-event-detection` from GitHub at a pinned commit).
-AudioProtoPNet:
-Heinrich et al. 2025, "AudioProtoPNet: An interpretable deep learning model for
-bird sound classification", Ecological Informatics. Perch 2.0: van Merriënboer et
-al. 2025, "Perch 2.0: The Bittern Lesson for Bioacoustics".
+models' embeddings. They need a CUDA GPU (fp16 autocast, batch
+`PROBEBENCH_TORCH_BATCH`, default 2); their Hugging Face files go to
+`<data>/models/huggingface` unless `HF_HUB_CACHE` is set. Install:
+`pip install -e ".[audioprotopnet]"` for AudioProtoPNet,
+`pip install -e ".[birdcode]"` for BirdCODE (installs `sound-event-detection` from
+GitHub at a pinned commit).
+
+Model papers:
+
+- AudioProtoPNet: Heinrich et al. 2025, "AudioProtoPNet: An interpretable deep
+  learning model for bird sound classification", *Ecological Informatics* 87,
+  103081, [10.1016/j.ecoinf.2025.103081](https://doi.org/10.1016/j.ecoinf.2025.103081).
+- BirdCODE: Fine et al. 2026, "BirdCODE: Detecting bird communication at scale",
+  *bioRxiv*, [10.64898/2026.07.31.742086](https://doi.org/10.64898/2026.07.31.742086).
+- Perch 2.0: van Merriënboer et al. 2025, "Perch 2.0: The Bittern Lesson for
+  Bioacoustics", *arXiv*,
+  [10.48550/arXiv.2508.04665](https://doi.org/10.48550/arXiv.2508.04665).
 
 ## Results
 
@@ -140,8 +148,8 @@ The per-task numbers, chosen C values and split sizes are in [`results/`](result
 Perch 2.0 was run with `perch-v2` itself. The two BirdNET columns were computed
 from other builds of the same models (V3.0: the TorchScript release; V2.4: its
 SavedModel); on 261 real windows their embeddings match the
-Zenodo files `birdnet-v3.0` and `birdnet-v2.4` load (cosine >= 0.9999 for V3.0 and
->= 0.999 for V2.4), and a rerun of ESC-50 and Watkins with those specs reproduces
+Zenodo files `birdnet-v3.0` and `birdnet-v2.4` load (cosine ≥ 0.9999 for V3.0 and
+≥ 0.999 for V2.4), and a rerun of ESC-50 and Watkins with those specs reproduces
 the table within 0.01 (V3.0 0.888 and 0.613, V2.4 0.809 and 0.658).
 
 Perch 2.0 has the best mean headline metric (0.787), AudioProtoPNet-20 is second

@@ -6,7 +6,7 @@ the same kind of representation as for the other models.
     audioprotopnet-20  AudioProtoPNet-20 BirdSet XCL (Heinrich et al. 2025),
                        Hugging Face DBD-research-group/AudioProtoPNet-20-BirdSet-XCL
                        (transformers, the repository's own code), 32 kHz, 5 s
-    birdcode           BirdCODE (Earth Species Project), Hugging Face
+    birdcode           BirdCODE (Fine et al. 2026, Earth Species Project), Hugging Face
                        EarthSpeciesProject/sed-birdcode (package sound_event_detection,
                        Python >= 3.12), 32 kHz, 5 s; MIT
 
