@@ -83,7 +83,7 @@ All data goes under one root: `--data <dir>`, else `$PROBEBENCH_DATA`, else
 
 | Spec | Model | Source | Runtime | Input | Embedding | License |
 |---|---|---|---|---|---|---|
-| `birdnet-v3.0` | BirdNET+ V3.0 Global 12K, FP32 ONNX | [10.5281/zenodo.24162518](https://doi.org/10.5281/zenodo.24162518) | onnxruntime | 32 kHz, 3 s | `embeddings` output, 1,280 | Apache-2.0 |
+| `birdnet-v3.0` | BirdNET+ V3.0 Global 12K, FP32 ONNX | [10.5281/zenodo.24362980](https://doi.org/10.5281/zenodo.24362980) | onnxruntime | 32 kHz, 3 s | `embeddings` output, 1,280 | Apache-2.0 |
 | `birdnet-v2.4` | BirdNET V2.4 Global 6K, FP32 TFLite | [10.5281/zenodo.15050749](https://doi.org/10.5281/zenodo.15050749) | ai-edge-litert | 48 kHz, 3 s | `GLOBAL_AVG_POOL` tensor, 1,024 | CC BY-NC 4.0 |
 | `perch-v2` | Perch 2.0 (Google DeepMind), TensorFlow SavedModel | [Kaggle: google/bird-vocalization-classifier](https://www.kaggle.com/models/google/bird-vocalization-classifier) (`perch_v2` v2 for GPU, `perch_v2_cpu` v1) | TensorFlow | 32 kHz, 5 s | `embedding` output, 1,536 | Apache-2.0 |
 | `audioprotopnet-20` | AudioProtoPNet-20 BirdSet XCL (ConvNeXt-base + prototype head) | [Hugging Face: DBD-research-group/AudioProtoPNet-20-BirdSet-XCL](https://huggingface.co/DBD-research-group/AudioProtoPNet-20-BirdSet-XCL) | torch + transformers (GPU) | 32 kHz, 5 s | encoder feature map, global average, 1,024 | CC BY-NC 4.0 |

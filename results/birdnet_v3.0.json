@@ -1,7 +1,7 @@
 {
  "_meta": {
   "label": "BirdNET+ V3.0",
-  "model": "BirdNET+ V3.0 Global 12K (doi:10.5281/zenodo.24162518), embeddings output (1,280 values), 32 kHz, 3 s windows; computed with the TorchScript build, whose embeddings match the Zenodo ONNX file (cosine >= 0.9999 on 261 windows)",
+  "model": "BirdNET+ V3.0 Global 12K (doi:10.5281/zenodo.24362980), embeddings output (1,280 values), 32 kHz, 3 s windows; computed with the TorchScript build, whose embeddings match the Zenodo ONNX file (cosine >= 0.9999 on 261 windows)",
   "recipe": "windows of the model's input length, hop half a window; mean + max pooled per clip; standardized; class-balanced logistic regression, C in {0.001, 0.01, 0.1, 1, 10} chosen on val; refit on train + val; test scored once",
   "date": "2026-11",
   "probebench": "0.1.0",

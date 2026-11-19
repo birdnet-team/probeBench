@@ -3,7 +3,7 @@
 
     birdnet-v3.0  BirdNET+ V3.0 Global 12K, FP32 ONNX (onnxruntime), 32 kHz, 3 s;
                   embedding = the "embeddings" output (1,280 values).
-                  doi:10.5281/zenodo.24162518, Apache-2.0
+                  doi:10.5281/zenodo.24362980, Apache-2.0
     birdnet-v2.4  BirdNET V2.4 Global 6K, FP32 TFLite (ai-edge-litert, or
                   TensorFlow's interpreter), 48 kHz, 3 s; embedding = the
                   GLOBAL_AVG_POOL tensor (1,024 values), as BirdNET-Analyzer reads it.
@@ -25,9 +25,9 @@ from ..download import Remote, fetch, zenodo
 from . import register
 
 V30 = {
-    "record": 24162518,
+    "record": 24362980,
     "file": "BirdNET+_V3.0_Global_12K_FP32.onnx",
-    "doi": "10.5281/zenodo.24162518",
+    "doi": "10.5281/zenodo.24362980",
     "license": "Apache-2.0",
 }
 V24 = {
